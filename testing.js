@@ -1,19 +1,19 @@
 process.env.NODE_ENV = 'test';
 
-let models = require('../models')
-let School = models.School;
+let models = require('./models/index')
 let Student = models.Student;
+let School = models.School;
 
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('../server.js');
+let server = require('./server.js');
 let should = chai.should();
 
 //write a function to seed your database before every test inside of the seed folder
 //your seed function should create 4 schools
 //your seed function should create 2 students that attend the first school
-let seedFunction = require('../seed')
+let seedFunction = require('./seed/index')
 
 
 chai.use(chaiHttp);
@@ -43,13 +43,16 @@ describe('Education', () => {
 
   describe('/POST school', () => {
       it('it should POST a school ', (done) => {
-        let school = schools[1]
+// let school = school[1] was incorrect; we have to define school
+// this test is asking us to create a school object and pass into the AJAX request the school variable we just created
+        let school = {name: "New School", district: "New district", size: 1000}
         chai.request(server)
             .post('/api/schools')
             .send(school)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
+// in the AJAX POST request we can append a message property to school.dataValues to add a message property to res.body
                 res.body.should.have.property('message').eql('School successfully added!');
                 res.body.should.have.property('name');
                 res.body.should.have.property('district');
@@ -61,7 +64,7 @@ describe('Education', () => {
 
   describe('/POST student', () => {
       it('it should POST a student ', (done) => {
-        let student = students[0]
+        let student = {name: 'New Student', age: 14, grade: 9, SchoolId: 3}
         chai.request(server)
             .post('/api/student')
             .send(student)

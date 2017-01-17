@@ -20,4 +20,4 @@ db.sequelize.sync().then(function() {
   app.listen(3000)
 })
 
-module.exports = app
+module.exports = app;
